@@ -13,42 +13,46 @@ export const createUserAccount = async (user: INewUser) => {
     )
     // console.log(newAccount, "new account");
 
-    if(!newAccount) throw new Error("Account not created");
+    if(!newAccount) throw new Error("Failed to create account");
 
-    const avatarUrl = avatars.getInitials(user.name);
+    // create avatar
+    const avatarUrl =  avatars.getInitials(user.name);
+
     const newUser = await saveUserToDB({
       accountId: newAccount.$id,
       name: newAccount.name,
       email: newAccount.email,
       username: user.username,
-      imageUrl: avatarUrl,
+      imageUrl: avatarUrl
     })
 
     return newUser;
+    
   } catch (error) {
     console.log(error);
     return error;
   }
 }
 
-export const saveUserToDB = async (user: {
+export const saveUserToDB = async (user : {
   accountId: string,
-  email: string,
   name: string,
-  imageUrl: URL,
-  username?: string
-
+  email: string,
+  username?: string,
+  imageUrl: URL
 }) => {
   try {
     const newUser = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
       ID.unique(),
-      user,
+      user
     )
     return newUser;
+    
   } catch (error) {
     console.log(error);
     return error;
   }
 }
+

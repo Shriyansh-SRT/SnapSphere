@@ -17,12 +17,13 @@ import { SignupValidation } from "@/lib/validation"
 import Loader from "@/components/shared/Loader"
 import { Link } from "react-router-dom"
 import { createUserAccount } from "@/lib/appwrite/api"
+import { useToast } from "@/hooks/use-toast"
 
 
 const SignupForm = () => {
 
   const [loading, setLoading] = useState(false)
-
+  const { toast } = useToast()
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -42,9 +43,10 @@ const SignupForm = () => {
     // console.log(newUser);
 
     if(!newUser){
-      return;
+      return toast({
+        title: "Sign up failed. Please try again.",
+      });
     }
-    
   }
 
   return (

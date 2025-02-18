@@ -16,7 +16,7 @@ export const createUserAccount = async (user: INewUser) => {
     if(!newAccount) throw new Error("Failed to create account");
 
     // create avatar
-    const avatarUrl =  avatars.getInitials(user.name);
+    const avatarUrl = new URL(avatars.getInitials(user.name));
 
     const newUser = await saveUserToDB({
       accountId: newAccount.$id,
@@ -56,3 +56,19 @@ export const saveUserToDB = async (user : {
   }
 }
 
+export const signInAccount = async (user: {
+  email: string,
+  password: string
+}) => {
+  try {
+    const session = await account.createEmailPasswordSession(
+      user.email,
+      user.password
+    )
+    return session; 
+    
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}

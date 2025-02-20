@@ -1,6 +1,7 @@
 import { account, appwriteConfig, avatars, databases } from "./config";
 import { INewUser } from "@/types/index.ts";
 import { ID } from 'appwrite'
+import { Query } from 'appwrite'
 
 export const createUserAccount = async (user: INewUser) => {
   try {
@@ -66,6 +67,28 @@ export const signInAccount = async (user: {
       user.password
     )
     return session; 
+    
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+export const getCurrentUser = async () => {
+  try {
+    const currentAccount = await account.get();
+
+    if(!currentAccount) throw new Error("No account found");
+
+    const currentUser = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId
+      [Query.equal('accountId', currentAccount.$id)]
+    )
+
+    if(!currentUser) throw new Error("No user found");
+
+    return currentUser.documents[0];
     
   } catch (error) {
     console.log(error);

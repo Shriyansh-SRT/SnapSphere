@@ -16,9 +16,6 @@ import Loader from "@/components/shared/Loader"
 import { Link } from "react-router-dom"
 import { useToast } from "@/hooks/use-toast"
 import { useCreateUserAccount, useSignInAccount } from "@/lib/react_query/queriesAndMutations"
-import { sign } from "crypto"
-import { signInAccount } from "@/lib/appwrite/api"
-
 
 const SignupForm = () => {
 
@@ -27,7 +24,7 @@ const SignupForm = () => {
   
   const { mutateAsync: createUserAccount, isLoading: isCreatingUser } = useCreateUserAccount();
 
-  const { mutateAsync: SignInAccount, isLoading: isSigningIn  } = useSignInAccount();
+  const { mutateAsync: signInAccount, isLoading: isSigningIn  } = useSignInAccount();
 
 
   const form = useForm<z.infer<typeof SignupValidation>>({

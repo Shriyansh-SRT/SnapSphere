@@ -1,6 +1,6 @@
 import { createContext,useContext, useState, useEffect } from 'react';
 import { IContextType, IUser } from '@/types';
-import { getCurrentUser } from '@/lib/appwrite/account';
+import { getCurrentUser } from '@/lib/appwrite/api';
 import { useNavigate } from 'react-router-dom';
 
 export const INITIAL_USER = {
@@ -59,8 +59,8 @@ const AuthProvider = ({ children } : { children: React.ReactNode }) => {
 
   useEffect(() => {
     if(
-      localStorage.getItem('cookieFallback') === '[]' || 
-      localStorage.getItem('cookieFallback') === null
+      localStorage.getItem('cookieFallback') === '[]'  
+      // localStorage.getItem('cookieFallback') === null
       ) navigate('sign-in')
 
       checkAuthUser();

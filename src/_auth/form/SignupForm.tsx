@@ -2,6 +2,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm} from "react-hook-form"
 import { Button } from "@/components/ui/button"
+import style from "@/styles/auth.module.css"
 import {
   Form,
   FormControl,
@@ -88,7 +89,7 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input type="text" className="shad-input" placeholder="Enter your name" {...field} />
+                  <Input type="text" className=" style.custom-input shad-input" placeholder="Enter your name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

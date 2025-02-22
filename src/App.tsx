@@ -4,7 +4,7 @@ import SignupForm from "./_auth/form/SignupForm"
 import AuthLayout from "./_auth/AuthLayout"
 import RootLayout from "./_root/RootLayout"
 import { Home } from "./_root/pages/index"
-import './globals.css'
+import './index.css'
 import { Toaster } from "@/components/ui/toaster"
 
 const App = () => {

@@ -2,13 +2,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../ui/button'
 import { useSignOutAccount } from '@/lib/react_query/queriesAndMutations'
 import { useEffect } from 'react';
+import { useUserContext } from '@/context/AuthContext';
 
 
 
 const Topbar = () => {
 
-  const {mutateAsync : signOut, isSuccess} = useSignOutAccount();
+  const {mutateAsync : signOutAccount, isSuccess} = useSignOutAccount();
   const navigate = useNavigate();
+  const { user } = useUserContext()
 
   useEffect(() => {
     if(isSuccess){
@@ -30,9 +32,12 @@ const Topbar = () => {
         </Link>
 
         <div className='flex gap-4'>
-          <Button variant='ghost' className='flex gap-4 items-center justify-start hover:bg-transparent hover:text-white !important' onClick={() => signOut()}>
+          <Button variant='ghost' className='flex gap-4 items-center justify-start hover:bg-transparent hover:text-white !important' onClick={() => signOutAccount()}>
             <img src="/assets/icons/logout.svg" alt="logout" />
           </Button>
+          <Link to={`/profile/${user.id}`} className='flex justify-center items-center gap-3'>
+          <img src={user.imageUrl || '/assets/images/profile.png'} alt="profile" className='h-8 w-8 rounded-full' />
+          </Link>
         </div>
         
       </div>

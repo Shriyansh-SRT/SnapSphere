@@ -13,7 +13,7 @@ const FileUploader = () => {
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
   return (
-    <div {...getRootProps()} className='flex justify-center items-center w-full bg-neutral-800 text-white rounded-xl border-dashed border-2 border-gray-400 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 cursor-pointer'>
+    <div {...getRootProps()} className='flex justify-center items-center w-full bg-neutral-800 text-white rounded-xl border-dashed border-2 border-gray-400 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 cursor-pointer max-h-[400px] mt-4'>
       <input {...getInputProps()} className='cursor-pointer' />
       {
         fileUrl ? (

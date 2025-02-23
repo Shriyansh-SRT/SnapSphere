@@ -18,7 +18,6 @@ const CreatePost = () => {
 
         <PostForm />
       </div>
-
     </div>
   )
 }

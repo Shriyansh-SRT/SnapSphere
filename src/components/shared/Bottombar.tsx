@@ -16,11 +16,11 @@ const Bottombar = () => {
               const isActive = pathname === link.route;
 
               return (
-                    <NavLink key={link.label} className={`rounded-lg base-medium hover:bg-indigo-700 transition group ${isActive && 'bg-indigo-700'} rounded-[10px] flex-col justify-center items-center gap-2 text-center p-3 transition`} to={link.route}>
+                    <NavLink key={link.label} className={`rounded-lg base-medium hover:bg-indigo-700 transition group ${isActive && 'bg-indigo-700'} rounded-[10px] flex flex-col justify-center items-center gap-2 text-center p-3 transition`} to={link.route}>
                       <img 
                         src={link.imgURL} 
                         alt={link.label} 
-                        className={`${isActive && 'invert brightness-0 transition'} group-hover:invert group-hover:brightness-200 group-hover:transition`}
+                        className={`${isActive && 'invert brightness-0 transition'}group-hover:invert group-hover:brightness-200 group-hover:transition`}
                         width={16}
                         height={16}
                         />

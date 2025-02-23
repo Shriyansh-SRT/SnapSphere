@@ -2,7 +2,6 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm} from "react-hook-form"
 import { Button } from "@/components/ui/button"
-import style from "@/styles/auth.module.css"
 import {
   Form,
   FormControl,
@@ -65,7 +64,6 @@ const SignupForm = () => {
 
     if(isLoggedIn){
       form.reset();
-
       navigate('/')
     }else{
       toast({title: "Failed to login. Please try again."})

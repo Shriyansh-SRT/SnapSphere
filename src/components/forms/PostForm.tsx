@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,28 +13,58 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import FileUploader from "../shared/FileUploader"
+import { PostValidation } from "@/lib/validation"
+import { Models } from "appwrite"
+import { useUserContext } from "@/context/AuthContext"
+import { toast } from "@/hooks/use-toast"
+import { useNavigate } from "react-router-dom"
+import { useCreatePost } from "@/lib/react_query/queriesAndMutations"
+
+
+type PostFormProps = {
+  post?: Models.Document
+}
 
  
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
+const PostForm = ({ post }: PostFormProps) => {
 
-const PostForm = () => {
+  const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+
+  const form = useForm<z.infer<typeof PostValidation>>({
+    resolver: zodResolver(PostValidation),
     defaultValues: {
-      username: "",
+      caption: post ? post?.caption : "",
+      file: [],
+      location: post ? post?.location : "",
+      tags: post ? post?.tags.join(',') : "",
+
     },
   })
  
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof PostValidation>) {
+    const newPost = await createPost({
+      ...values,
+      userId: user.id,
+    })
+
+    if(!newPost){
+      return (
+        toast({
+          title: "Post could not be created",
+        })
+      )
+    }
+
+    toast({
+      title: "Post created successfully"
+    })
+
+    navigate('/')
+
   }
   return (
     <Form {...form}>
@@ -61,7 +90,10 @@ const PostForm = () => {
             <FormItem>
               <FormLabel className="text-white !important">Add Photos</FormLabel>
               <FormControl>
-                <FileUploader />
+                <FileUploader
+                  fieldChange={field.onChange}
+                  mediaUrl={post?.imageUrl}
+                />
               </FormControl>
               <FormMessage className="text-red !important" />
             </FormItem>
@@ -76,7 +108,7 @@ const PostForm = () => {
               <FormLabel className="text-white !important">Add Location</FormLabel>
               <FormControl>
                 <Input placeholder="add location" type="text" className="
-                mt-4 h-12 bg-neutral-800 border-none placeholder:text-white-4 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" />
+                mt-4 h-12 bg-neutral-800 border-none placeholder:text-white-4 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" {...field}/>
               </FormControl>
               <FormMessage className="text-red !important" />
             </FormItem>
@@ -94,7 +126,7 @@ const PostForm = () => {
                   type="text"
                   placeholder="#art, #entertainment, #music" 
                   className="
-                mt-4 h-12 bg-neutral-800 border-none placeholder:text-white-4 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" />
+                mt-4 h-12 bg-neutral-800 border-none placeholder:text-white-4 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important" {...field}/>
               </FormControl>
               <FormMessage className="text-red !important" />
             </FormItem>
@@ -113,6 +145,15 @@ const PostForm = () => {
             >
               Post
           </Button>
+
+        {/* <a href="#_" className="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-indigo-600 border-2 border-indigo-600 rounded-full hover:text-white group hover:bg-gray-50">
+            <span className="absolute left-0 block w-full h-0 transition-all bg-indigo-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+            <span className="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </span>
+            <span className="relative">Post</span>
+          </a> */}
+          
         </div>    
         
       </form>
@@ -121,3 +162,5 @@ const PostForm = () => {
 }
 
 export default PostForm
+
+

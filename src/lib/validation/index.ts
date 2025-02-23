@@ -19,3 +19,9 @@ export const SigninValidation = z.object({
   })
 })
 
+export const PostValidation = z.object({
+  caption: z.string().min(5, { message: "Caption must be atleast five charcters" }).max(2000),
+  file: z.custom<File[]>(),
+  location: z.string().min(2).max(100).optional(),
+  tags: z.string().optional()
+})

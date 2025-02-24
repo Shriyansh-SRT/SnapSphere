@@ -2,6 +2,7 @@ import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { INewPost, INewUser } from "@/types/index.ts";
 import { ID } from 'appwrite'
 import { Query } from 'appwrite'
+import { ImageGravity } from "appwrite";
 
 export const createUserAccount = async (user: INewUser) => {
   try {
@@ -112,10 +113,11 @@ export const createPost = async (post: INewPost) => {
   try {
     // upload image to storage
     const uploadedFile = await uploadFile(post.file[0]);
+    console.log(uploadedFile, "uploaded file");
 
     if(!uploadedFile) throw new Error("Failed to upload file");
 
-    //Get file Url
+    //Get file Url for preview
     const fileUrl = getFilePreview(uploadedFile.$id);
     if(!fileUrl) {
       deleteFile(uploadedFile.$id);
@@ -149,12 +151,11 @@ export const createPost = async (post: INewPost) => {
     
   } catch (error) {
     console.log(error);
-    return error;
   }
 
 }
 
-export const uploadFile = async (file: File) => {
+export const uploadFile = async (file: File): Promise<{ $id: string }> => {
   try {
     const uploadedFile = await storage.createFile(
       appwriteConfig.storageId,
@@ -166,7 +167,7 @@ export const uploadFile = async (file: File) => {
     
   } catch (error) {
     console.log(error);
-    return error;
+    throw new Error("Failed to upload file");
   }
 }
 
@@ -177,7 +178,7 @@ export const getFilePreview = (fileId: string ) => {
       fileId,
       2000,
       2000,
-      'top',
+      ImageGravity.Top,
       100,
     );
     return fileUrl;
@@ -200,3 +201,21 @@ export const deleteFile =async (fileId: string) => {
     console.log(error)
   }
 }
+
+export const getRecentPosts = async () => {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.orderDesc('$createdAt'), Query.limit(20)]
+    )
+
+    if(!posts) throw new Error("No posts found");
+
+    return posts;
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
+

@@ -4,7 +4,7 @@ import {
   useQueryClient,
   useInfiniteQuery,
 } from '@tanstack/react-query'
-import { createPost, createUserAccount, getRecentPosts, signInAccount, signOutAccount, likePost } from '../appwrite/api'
+import { createPost, createUserAccount, getRecentPosts, signInAccount, signOutAccount, likePost, savePost } from '../appwrite/api'
 import { INewPost, INewUser } from '@/types'
 import { QUERY_KEYS } from './queryKeys'
 
@@ -54,6 +54,25 @@ export const useLikePost = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
       })
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER]
+      })
+    }
+  })
+}
+
+export const useSavePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({postId, userId} : {postId: string, userId: string}) => savePost(postId, userId),
+    onSuccess: (data: { $id: string }) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
       })

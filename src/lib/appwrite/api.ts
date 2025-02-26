@@ -244,7 +244,7 @@ export const savePost = async (postId: string, userId: string) => {
   try {
     const updatedPost = await databases.createDocument(
       appwriteConfig.databaseId,
-      appwriteConfig.postCollectionId,
+      appwriteConfig.savesCollectionId,
       ID.unique(),
       {
         user: userId,
@@ -261,3 +261,18 @@ export const savePost = async (postId: string, userId: string) => {
 
 } 
 
+export const deleteSavedPost = async ( savedRecordId: string) => {
+  try {
+    const statusCode =  await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      savedRecordId
+    )
+
+    if(!statusCode) throw new Error("Failed to delete saved post");
+
+    return { status: "ok" };
+  } catch (error) {
+    console.log(error)
+  }
+}

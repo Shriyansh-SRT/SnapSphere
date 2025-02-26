@@ -2,15 +2,14 @@ import { useUserContext } from "@/context/AuthContext"
 import { formatRelativeTime } from "@/lib/utils"
 import { Models } from "appwrite"
 import { Link } from "react-router-dom"
+import PostStats from "./PostStats"
 
 type PostCardProps = {
   post: Models.Document
 }
 
 const PostCard = ({ post }: PostCardProps) => {
-
-  console.log(post, "Post")
-
+  
   const { user } = useUserContext();
 
   if(!post.creator) return null;
@@ -31,15 +30,16 @@ const PostCard = ({ post }: PostCardProps) => {
             <p className="text-[16px] font-medium leading-[140%] lg:text-[18px] lg:font-bold text-white">
               {post.creator.name}
             </p>
-              <div className="flex items-center justify-center gap-2 text-slate-500">
-                <p className="text-[12px] font-semibold leading-[140%] lg:ext-[14px] lg:font-normal">
-                  {formatRelativeTime(post.$createdAt)}
-                </p>
-                -
-                <p className="text-[12px] font-semibold leading-[140%] lg:ext-[14px] lg:font-normal">
-                  {post.location}
-                </p>
-              </div>
+
+            <div className="flex items-center justify-center gap-2 text-slate-500">
+              <p className="text-[12px] font-semibold leading-[140%] lg:ext-[14px] lg:font-normal">
+                {formatRelativeTime(post.$createdAt)}
+              </p>
+              -
+              <p className="text-[12px] font-semibold leading-[140%] lg:ext-[14px] lg:font-normal">
+                {post.location}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -72,6 +72,8 @@ const PostCard = ({ post }: PostCardProps) => {
           />
       
       </Link>
+
+      <PostStats post={post} userId={user.id} />
     </div>
   )
 }

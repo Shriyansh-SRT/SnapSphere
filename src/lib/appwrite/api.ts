@@ -1,3 +1,4 @@
+import { UpdateProfile } from "@/_root/pages";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { INewPost, INewUser } from "@/types/index.ts";
 import { ID } from 'appwrite'
@@ -219,3 +220,22 @@ export const getRecentPosts = async () => {
   }
 }
 
+export const likePost = async (postId: string, likeArray: string[]) => {
+  try {
+    const updatedPost = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      postId,
+      {
+        likes: likeArray
+      }
+    )
+
+    if(!updatedPost) throw new Error("Failed to like post");
+
+    return UpdateProfile;
+    
+  } catch (error) {
+    console.log(error)
+  }
+}

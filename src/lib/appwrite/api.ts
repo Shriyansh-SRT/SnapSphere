@@ -239,3 +239,25 @@ export const likePost = async (postId: string, likeArray: string[]) => {
     console.log(error)
   }
 }
+
+export const savePost = async (postId: string, userId: string) => {
+  try {
+    const updatedPost = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      ID.unique(),
+      {
+        user: userId,
+        post: postId
+      }
+    )
+
+    if(!updatedPost) throw new Error("Failed to save post");
+
+    return updatedPost;
+  } catch (error) {
+    console.log(error)
+  }
+
+} 
+

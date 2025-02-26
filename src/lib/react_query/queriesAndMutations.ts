@@ -47,25 +47,30 @@ export const useGetRecentPosts = () => {
 
 export const useLikePost = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: ({postId, likesArray} : {postId: string, likesArray: string[]}) => likePost(postId, likesArray),
-    onSuccess: (data: { $id: string }) => {
+    mutationFn: ({
+      postId,
+      likesArray,
+    }: {
+      postId: string;
+      likesArray: string[];
+    }) => likePost(postId, likesArray),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
-      })
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
+      });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
-      })
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POSTS]
-      })
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_CURRENT_USER]
-      })
-    }
-  })
-}
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+    },
+  });
+};
 
 export const useSavePost = () => {
   const queryClient = useQueryClient();

@@ -15,3 +15,9 @@ dayjs.extend(relativeTime);
 export const formatRelativeTime = (timestamp: string): string => {
   return dayjs(timestamp).fromNow();
 };
+
+export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
+
+export const checkIsLiked = (likeList: string[], userId: string) => {
+  return likeList.includes(userId);
+};

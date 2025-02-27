@@ -12,7 +12,7 @@ const PostCard = ({ post }: PostCardProps) => {
   
   const { user } = useUserContext();
 
-  if(!post.creator) return null;
+  if(!post.creator) return;
 
   return (
     <div className="bg-zinc-950 rounded-3xl border border-zinc-900 p-5 lg:p-7 w-full max-w-screen-sm">

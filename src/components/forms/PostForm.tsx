@@ -18,18 +18,23 @@ import { Models } from "appwrite"
 import { useUserContext } from "@/context/AuthContext"
 import { toast } from "@/hooks/use-toast"
 import { useNavigate } from "react-router-dom"
-import { useCreatePost } from "@/lib/react_query/queriesAndMutations"
+import { useCreatePost, useUpdatePost } from "@/lib/react_query/queriesAndMutations"
+import Loader from "../shared/Loader"
 
 
 type PostFormProps = {
   post?: Models.Document
-  action: 'create' | 'update'
+  action: 'Create' | 'Update'
 }
 
  
 const PostForm = ({ post, action }: PostFormProps) => {
 
+  // Query hooks
   const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
+  const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost();
+ 
+
 
   const { user } = useUserContext();
   const navigate = useNavigate();
@@ -47,6 +52,27 @@ const PostForm = ({ post, action }: PostFormProps) => {
  
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PostValidation>) {
+    // Action == update
+    if(post && action === 'Update'){
+      const updatedPost = await updatePost({
+        ...values,
+        postId: post.$id,
+        imageId: post.imageId,
+        imageUrl: post.imageUrl,
+      })
+
+      if(!updatedPost){
+        return (
+          toast({
+            title: "Post could not be updated",
+          })
+        )
+      }
+
+      return navigate(`/posts/${post.$id}`)
+    }
+
+    // Action == create
     const newPost = await createPost({
       ...values,
       userId: user.id,
@@ -60,13 +86,9 @@ const PostForm = ({ post, action }: PostFormProps) => {
       )
     }
 
-    toast({
-      title: "Post created successfully"
-    })
-
     navigate('/')
+  };
 
-  }
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">
@@ -143,20 +165,12 @@ const PostForm = ({ post, action }: PostFormProps) => {
           <Button 
             type="submit"
             className="bg-indigo-400 h-12 px-5 hover:bg-indigo-500 text-white flex gap-2 !important"
+            disabled={isLoadingCreate || isLoadingUpdate}
             >
-              Post
+              {(isLoadingCreate || isLoadingUpdate) && <Loader />}
+              {action} Post
           </Button>
-
-        {/* <a href="#_" className="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-indigo-600 border-2 border-indigo-600 rounded-full hover:text-white group hover:bg-gray-50">
-            <span className="absolute left-0 block w-full h-0 transition-all bg-indigo-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
-            <span className="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </span>
-            <span className="relative">Post</span>
-          </a> */}
-          
         </div>    
-        
       </form>
     </Form>
   )

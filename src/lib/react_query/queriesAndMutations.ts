@@ -16,9 +16,10 @@ import
   deleteSavedPost, 
   getCurrentUser, 
   getPostById,
-  updatePost} 
+  updatePost,
+  deletePost} 
 from '../appwrite/api'
-import { INewPost, INewUser } from '@/types'
+import { INewPost, INewUser, IUpdatePost } from '@/types'
 import { QUERY_KEYS } from './queryKeys'
 
 export const useCreateUserAccount = () => {

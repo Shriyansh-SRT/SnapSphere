@@ -338,17 +338,8 @@ export async function updatePost(post: IUpdatePost) {
     // Failed to update
     if (!updatedPost) {
       // Delete new file that has been recently uploaded
-      if (hasFileToUpdate) {
-        await deleteFile(image.imageId);
-      }
-
-      // If no new file uploaded, just throw error
-      throw Error;
-    }
-
-    // Safely delete old file after successful update
-    if (hasFileToUpdate) {
       await deleteFile(post.imageId);
+      throw Error;
     }
 
     return updatedPost;

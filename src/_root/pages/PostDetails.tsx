@@ -35,23 +35,22 @@ const PostDetails = () => {
                 alt="creator"
                 className="rounded-full w-8 h-8 lg:h-12 lg:w-12 object-cover"
                 />
-            
 
-            <div className="flex flex-col">
-              <p className="text-[16px] font-medium leading-[140%] lg:text-[18px] lg:font-bold text-white">
-                {post?.creator.name}
-              </p>
+              <div className="flex flex-col">
+                <p className="text-[16px] font-medium leading-[140%] lg:text-[18px] lg:font-bold text-white">
+                  {post?.creator.name}
+                </p>
 
-              <div className="flex items-center justify-center gap-2 text-slate-500">
-                <p className="text-[12px] font-semibold leading-[140%] lg:ext-[14px] lg:font-normal">
-                  {formatRelativeTime(post?.$createdAt || '')}
-                </p>
-                -
-                <p className="text-[12px] font-semibold leading-[140%] lg:ext-[14px] lg:font-normal">
-                  {post?.location}
-                </p>
+                <div className="flex items-center justify-center gap-2 text-slate-500">
+                  <p className="text-[12px] font-semibold leading-[140%] lg:ext-[14px] lg:font-normal">
+                    {formatRelativeTime(post?.$createdAt || '')}
+                  </p>
+                  -
+                  <p className="text-[12px] font-semibold leading-[140%] lg:ext-[14px] lg:font-normal">
+                    {post?.location}
+                  </p>
+                </div>
               </div>
-            </div>
             </Link>
 
             <div className="flex items-center gap-4">
@@ -94,11 +93,11 @@ const PostDetails = () => {
                   </li>
                 ))}
               </ul>
-          </div>
+              </div>
 
-          <div className="w-full">
-            <PostStats post={post} userId={user.id} />
-          </div>
+            <div className="w-full">
+              <PostStats post={post} userId={user.id} />
+            </div>
             
           </div>
         </div>

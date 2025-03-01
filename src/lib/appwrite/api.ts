@@ -368,3 +368,25 @@ export async function deletePost(postId?: string, imageId?: string) {
     console.log(error);
   }
 }
+
+export const getInfinitePosts = async ({ pageParam } : { pageParam: number }) => {
+  const queries: any[] = [Query.orderDesc('$createdAt'), Query.limit(10)]
+
+  if(pageParam){
+    queries.push(Query.cursorAfter(pageParam.toString()));
+
+    try {
+      const posts = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.postCollectionId,
+        queries
+      )
+
+      if(!posts) throw new Error("No posts found");
+
+      return posts;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}

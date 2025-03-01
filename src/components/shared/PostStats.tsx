@@ -12,13 +12,13 @@ import {
 import Loader from '@/components/shared/Loader';
 
 type PostStatsProps = {
-  post: Models.Document;
+  post?: Models.Document;
   userId: string;
 };
 
 const PostStats = ({ post, userId }: PostStatsProps) => {
   const location = useLocation();
-  const likesList = post.likes.map((user: Models.Document) => user.$id);
+  const likesList = post?.likes.map((user: Models.Document) => user.$id);
   console.log("likesList", likesList);
 
   const [likes, setLikes] = useState<string[]>(likesList);
@@ -32,7 +32,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const { data: currentUser } = useGetCurrentUser();
 
   const savedPostRecord = currentUser?.save?.find(
-    (record: Models.Document) => record.post.$id === post.$id
+    (record: Models.Document) => record.post.$id === post?.$id
   );
 
   console.log("currentUser", currentUser);
@@ -56,7 +56,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     }
 
     setLikes(likesArray);
-    likePost({ postId: post.$id, likesArray });
+    likePost({ postId: post?.$id || '', likesArray });
   };
 
   const handleSavePost = (
@@ -70,7 +70,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
       setIsSaved(false);
       deleteSavedPost(savedPostRecord.$id);
     }else{
-      savePost({ userId: userId, postId: post.$id });
+      savePost({ userId: userId, postId: post?.$id || '' });
       setIsSaved(true);
     }
 

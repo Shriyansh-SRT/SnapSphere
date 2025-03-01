@@ -7,6 +7,8 @@ import { useState } from "react"
 const Explore = () => {
 
   const [searchValue, setSearchValue] = useState('')
+
+  const { data: searchedPosts,  }
   
   // const posts = [];
   // const shouldShowSearchResults = searchValue !== '';
